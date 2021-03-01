@@ -24,10 +24,11 @@ Adapted from: https://github.com/jaicher/snakemake-sync-bq-sub
 """
 
 import sys
+import os
 import re
 import math
 import subprocess
-import time
+# import time
 from pathlib import Path
 from snakemake.utils import read_job_properties
 
@@ -74,7 +75,8 @@ def get_job_name(job_properties: dict) -> str:
 
 
 def generate_jobinfo_command(job_properties: dict) -> str:
-    log_dir = Path(cluster.get("logdir", "/home/kraemers/temp/logs2"))
+    log_dir = Path(cluster.get("logdir", Path.home() / 'logs'))
+    os.makedirs(log_dir, exist_ok=True)
 
     if not log_dir.absolute().exists():
         raise NotADirectoryError(
